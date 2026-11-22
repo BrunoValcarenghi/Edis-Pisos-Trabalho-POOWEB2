@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Conheça os pisos Edis e compartilhe sua avaliação.">
+  <title>Edis Pisos | Catálogo</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Edis Pisos - início"><img src="/img/icon.png" alt=""><span>EDIS<br>PISOS</span></a>
+    <nav><a href="#catalogo">Catálogo</a><a href="#avaliacoes">Avaliações</a><a href="/swagger-ui.html">API</a></nav>
+    <button id="auth-open" class="button button-outline">Entrar</button>
+    <button id="logout" class="button button-outline hidden">Sair</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">Pisos que acompanham sua vida</p>
+      <h1>Escolha um piso<br><em>com personalidade.</em></h1>
+      <p>Explore a coleção Edis e veja o que outros clientes acharam.</p>
+      <a class="button" href="#catalogo">Conhecer coleção</a>
+    </section>
+
+    <section id="catalogo" class="section">
+      <div class="section-heading"><div><p class="eyebrow">Nossa coleção</p><h2>Catálogo de pisos</h2></div><p id="catalog-message" class="muted"></p></div>
+      <div id="products" class="products"></div>
+    </section>
+
+    <section id="avaliacoes" class="section reviews-section">
+      <div class="section-heading"><div><p class="eyebrow">Experiências reais</p><h2>Avaliações</h2></div></div>
+      <form id="review-form" class="review-form hidden"><label for="review-text">Conte o que achou</label><textarea id="review-text" maxlength="2000" required></textarea><button class="button">Publicar avaliação</button></form>
+      <p id="review-login-note" class="muted">Entre para publicar sua avaliação.</p>
+      <div id="reviews" class="reviews"></div>
+    </section>
+  </main>
+
+  <footer><a class="brand" href="/" aria-label="Edis Pisos - início"><img src="/img/icon.png" alt=""><span>EDIS<br>PISOS</span></a><span>Catálogo e avaliações da Edis Pisos</span></footer>
+
+  <dialog id="auth-dialog">
+    <form method="dialog" class="dialog-close"><button aria-label="Fechar">×</button></form>
+    <p class="eyebrow">Acesse sua conta</p><h2 id="auth-title">Entrar</h2>
+    <form id="auth-form" class="auth-form">
+      <label id="name-label" class="hidden">Nome<input id="name" maxlength="120" autocomplete="name"></label>
+      <label>Email<input id="email" type="email" maxlength="180" autocomplete="email" required></label>
+      <label>Senha<input id="password" type="password" minlength="8" maxlength="72" autocomplete="current-password" required></label>
+      <button id="auth-submit" class="button">Entrar</button>
+    </form>
+    <button id="auth-switch" class="text-button">Criar uma conta</button>
+    <p id="auth-message" class="message" role="status"></p>
+  </dialog>
+  <script src="/js/app.js" defer></script>
+</body>
+</html>
