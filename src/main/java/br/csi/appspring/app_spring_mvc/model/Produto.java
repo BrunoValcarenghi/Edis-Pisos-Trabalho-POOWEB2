@@ -8,12 +8,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "produto")
+@Schema(description = "Piso disponível no catálogo")
 public class Produto {
 
     @Id

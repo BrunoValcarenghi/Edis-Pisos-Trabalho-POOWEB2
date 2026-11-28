@@ -5,6 +5,7 @@ import br.csi.appspring.app_spring_mvc.dto.AvaliacaoResponseDTO;
 import br.csi.appspring.app_spring_mvc.infra.security.UsuarioPrincipal;
 import br.csi.appspring.app_spring_mvc.service.AvaliacaoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -38,6 +39,9 @@ public class AvaliacaoController {
 
     @GetMapping
     @Operation(summary = "Lista as avaliações públicas")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Avaliações retornadas com sucesso")
+    })
     public ResponseEntity<List<AvaliacaoResponseDTO>> listar() {
         return ResponseEntity.ok(avaliacaoService.listarTodas());
     }
@@ -66,6 +70,7 @@ public class AvaliacaoController {
             @ApiResponse(responseCode = "404", description = "Avaliação não encontrada ou pertence a outra pessoa")
     })
     public ResponseEntity<AvaliacaoResponseDTO> editar(
+            @Parameter(description = "Identificador da avaliação", example = "1")
             @PathVariable int id,
             @Valid @RequestBody AvaliacaoRequestDTO request,
             @AuthenticationPrincipal UsuarioPrincipal usuario) {
@@ -82,6 +87,7 @@ public class AvaliacaoController {
             @ApiResponse(responseCode = "404", description = "Avaliação não encontrada ou pertence a outra pessoa")
     })
     public void excluir(
+            @Parameter(description = "Identificador da avaliação", example = "1")
             @PathVariable int id,
             @AuthenticationPrincipal UsuarioPrincipal usuario) {
         avaliacaoService.excluir(id, usuario.getId());

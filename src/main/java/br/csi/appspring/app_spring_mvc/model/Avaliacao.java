@@ -9,9 +9,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Table(name = "avaliacao")
+@Schema(description = "Avaliação de um produto publicada por um usuário")
 public class Avaliacao {
 
     @Id

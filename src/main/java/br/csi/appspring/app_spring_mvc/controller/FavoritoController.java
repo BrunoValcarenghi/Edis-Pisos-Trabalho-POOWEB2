@@ -4,6 +4,7 @@ import br.csi.appspring.app_spring_mvc.dto.ProdutoResponseDTO;
 import br.csi.appspring.app_spring_mvc.infra.security.UsuarioPrincipal;
 import br.csi.appspring.app_spring_mvc.service.FavoritoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -52,6 +53,7 @@ public class FavoritoController {
             @ApiResponse(responseCode = "404", description = "Produto não encontrado")
     })
     public ResponseEntity<Void> adicionar(
+            @Parameter(description = "Identificador do produto a favoritar", example = "1")
             @PathVariable int produtoId,
             @AuthenticationPrincipal UsuarioPrincipal usuario) {
         favoritoService.adicionar(usuario.getId(), produtoId);
@@ -66,6 +68,7 @@ public class FavoritoController {
             @ApiResponse(responseCode = "401", description = "JWT ausente ou inválido")
     })
     public ResponseEntity<Void> remover(
+            @Parameter(description = "Identificador do produto a remover dos favoritos", example = "1")
             @PathVariable int produtoId,
             @AuthenticationPrincipal UsuarioPrincipal usuario) {
         favoritoService.remover(usuario.getId(), produtoId);

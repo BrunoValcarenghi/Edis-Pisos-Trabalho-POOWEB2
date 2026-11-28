@@ -10,12 +10,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "usuario")
+@Schema(description = "Conta de usuário e sua relação com os produtos favoritos")
 public class Usuario {
 
     @Id

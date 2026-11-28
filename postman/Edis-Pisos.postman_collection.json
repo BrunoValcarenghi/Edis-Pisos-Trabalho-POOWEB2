@@ -1,0 +1,294 @@
+{
+  "info": {
+    "_postman_id": "70e82126-bb55-4bc8-8e2c-ded1f4bf1c2d",
+    "name": "Edis Pisos API",
+    "description": "Coleção de demonstração e testes da API Edis Pisos. Execute as requisições na ordem apresentada: o cadastro salva email/token e a criação da avaliação salva seu ID para edição e exclusão.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Autenticação",
+      "item": [
+        {
+          "name": "Cadastrar usuário",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Usuário Postman\",\n  \"email\": \"{{email}}\",\n  \"senha\": \"{{password}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/auth/cadastro",
+            "description": "Gera um email único a cada execução e salva o JWT retornado nas variáveis da coleção."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.collectionVariables.set('email', `postman.${Date.now()}@exemplo.com`);"]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Cadastro retorna 201 Created', function () { pm.response.to.have.status(201); });",
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('token', data.token);",
+                  "pm.collectionVariables.set('usuarioId', data.usuarioId);",
+                  "pm.test('Resposta contém JWT e usuário', function () { pm.expect(data.token).to.be.a('string').and.not.empty; pm.expect(data.usuarioId).to.be.a('number'); });"
+                ]
+              }
+            }
+          ],
+          "auth": { "type": "noauth" }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"senha\": \"{{password}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login retorna 200 OK', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('token', data.token);",
+                  "pm.collectionVariables.set('usuarioId', data.usuarioId);",
+                  "pm.test('Resposta contém JWT e usuário', function () { pm.expect(data.token).to.be.a('string').and.not.empty; pm.expect(data.usuarioId).to.be.a('number'); });"
+                ]
+              }
+            }
+          ],
+          "auth": { "type": "noauth" }
+        }
+      ]
+    },
+    {
+      "name": "Produtos",
+      "item": [
+        {
+          "name": "Listar catálogo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/produtos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Catálogo retorna 200 OK', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Resposta é uma lista', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ]
+              }
+            }
+          ],
+          "auth": { "type": "noauth" }
+        }
+      ]
+    },
+    {
+      "name": "Avaliações",
+      "item": [
+        {
+          "name": "Listar avaliações",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/avaliacoes"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Avaliações retornam 200 OK', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Resposta é uma lista', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ]
+              }
+            }
+          ],
+          "auth": { "type": "noauth" }
+        },
+        {
+          "name": "Criar avaliação",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"texto\": \"Avaliação de teste criada pelo Postman.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/avaliacoes"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Criação retorna 201 Created', function () { pm.response.to.have.status(201); });",
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('avaliacaoId', data.id);",
+                  "pm.test('Resposta contém o ID da avaliação', function () { pm.expect(data.id).to.be.a('number'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar avaliação criada",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"texto\": \"Avaliação editada pelo Postman.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/avaliacoes/{{avaliacaoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Edição retorna 200 OK', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Texto foi atualizado', function () { pm.expect(pm.response.json().texto).to.eql('Avaliação editada pelo Postman.'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Excluir avaliação criada",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/avaliacoes/{{avaliacaoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Exclusão retorna 204 No Content', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Favoritos",
+      "item": [
+        {
+          "name": "Adicionar produto 1 aos favoritos",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": "{{baseUrl}}/api/favoritos/{{produtoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Inclusão retorna 204 No Content', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar favoritos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/favoritos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Favoritos retornam 200 OK', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Produto favoritado está na lista', function () { const favoritos = pm.response.json(); pm.expect(favoritos).to.be.an('array'); pm.expect(favoritos.some(function (produto) { return produto.id === Number(pm.collectionVariables.get('produtoId')); })).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Remover produto dos favoritos",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/favoritos/{{produtoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Remoção retorna 204 No Content', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
+    { "key": "email", "value": "", "type": "string" },
+    { "key": "password", "value": "SenhaSegura123", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "usuarioId", "value": "", "type": "string" },
+    { "key": "produtoId", "value": "1", "type": "string" },
+    { "key": "avaliacaoId", "value": "", "type": "string" }
+  ]
+}

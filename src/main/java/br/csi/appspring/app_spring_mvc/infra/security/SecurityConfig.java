@@ -3,6 +3,7 @@ package br.csi.appspring.app_spring_mvc.infra.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -14,6 +15,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class SecurityConfig {
+
+    @Bean
+    public FilterRegistrationBean<FiltroTokenJwt> filtroTokenJwtRegistration(
+            FiltroTokenJwt filtroTokenJwt) {
+        FilterRegistrationBean<FiltroTokenJwt> registration =
+                new FilterRegistrationBean<>(filtroTokenJwt);
+        registration.setEnabled(false);
+        return registration;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
